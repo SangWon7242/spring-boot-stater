@@ -1,9 +1,11 @@
 package com.backend.global.app;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean; // Bean 어노테이션 임포트
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.web.client.RestTemplate; // RestTemplate 임포트
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -88,5 +90,11 @@ public class AppConfig {
 
   public static String getGenFileDirPath() {
     return genFileDirPath;
+  }
+
+  // RestTemplate Bean 추가
+  @Bean
+  public RestTemplate restTemplate() {
+    return new RestTemplate();
   }
 }

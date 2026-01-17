@@ -34,6 +34,98 @@ cd spring-boot-stater
         ```
 4.  **확인**: 애플리케이션이 성공적으로 시작되면, 일반적으로 `http://localhost:8080`에서 백엔드 API에 접근할 수 있습니다. (포트 번호는 설정에 따라 다를 수 있습니다.)
 
+## 외부 API 호출 및 사용법
+
+이 프로젝트는 `RestTemplate`를 사용하여 외부 JSON API를 호출하고, 그 데이터를 Thymeleaf 템플릿을 통해 웹 페이지에 표시하는 예제를 포함하고 있습니다.
+
+### 1. Todo DTO (Data Transfer Object)
+
+외부 API(`https://jsonplaceholder.typicode.com/todos`)에서 반환되는 JSON 데이터를 매핑하기 위한 DTO 클래스입니다.
+
+*   **경로**: `src/main/java/com/backend/domain/post/post/dto/Todo.java`
+*   **구조**:
+    ```java
+    package com.backend.domain.post.post.dto;
+
+    import lombok.AllArgsConstructor;
+    import lombok.Data;
+    import lombok.NoArgsConstructor;
+
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public class Todo {
+        private Long userId;
+        private Long id;
+        private String title;
+        private boolean completed;
+    }
+    ```
+
+### 2. RestTemplate Bean 설정
+
+`RestTemplate`는 Spring에서 제공하는 HTTP 클라이언트로, 외부 API를 호출하는 데 사용됩니다. 이 객체는 Spring 컨테이너에 빈으로 등록되어야 합니다.
+
+*   **경로**: `src/main/java/com/backend/global/app/AppConfig.java`
+*   **추가된 코드**:
+    ```java
+    import org.springframework.context.annotation.Bean;
+    import org.springframework.web.client.RestTemplate;
+
+    @Configuration
+    public class AppConfig {
+        // ... 기존 코드 ...
+
+        @Bean
+        public RestTemplate restTemplate() {
+            return new RestTemplate();
+        }
+    }
+    ```
+
+### 3. PostController에서 API 호출
+
+`PostController`는 `RestTemplate`를 주입받아 `jsonplaceholder.typicode.com/todos` API를 호출하고, 가져온 데이터를 Thymeleaf 템플릿으로 전달합니다.
+
+*   **경로**: `src/main/java/com/backend/domain/post/post/controller/PostController.java`
+*   **관련 메서드**:
+    ```java
+    import com.backend.domain.post.post.dto.Todo;
+    import org.springframework.web.client.RestTemplate;
+    import java.util.Arrays;
+    import java.util.List;
+
+    @Controller
+    @RequestMapping("/posts")
+    @RequiredArgsConstructor
+    public class PostController {
+      private final PostService postService;
+      private final RestTemplate restTemplate; // RestTemplate 주입
+
+      @GetMapping("/list/todos")
+      public String getTodos(Model model) {
+        String apiUrl = "https://jsonplaceholder.typicode.com/todos";
+        // RestTemplate을 사용하여 외부 API 호출
+        Todo[] todosArray = restTemplate.getForObject(apiUrl, Todo[].class);
+        List<Todo> todos = Arrays.asList(todosArray);
+
+        model.addAttribute("todos", todos); // 모델에 todos 추가
+
+        return "posts/todos"; // todos를 보여줄 Thymeleaf 템플릿
+      }
+    }
+    ```
+
+### 4. Thymeleaf 템플릿에서 데이터 표시
+
+`posts/todos.html` 템플릿은 `PostController`에서 전달받은 `todos` 데이터를 사용하여 반응형 그리드 형태로 목록을 표시합니다.
+
+*   **경로**: `src/main/resources/templates/posts/todos.html`
+*   **접근 URL**: `http://localhost:8080/posts/list/todos` (애플리케이션이 실행 중인 포트에 따라 다를 수 있습니다.)
+*   **특징**: Tailwind CSS를 사용하여 모바일과 데스크탑 환경에 따라 다른 레이아웃을 제공하는 반응형 디자인이 적용되어 있습니다. (빠른 테스트를 위해 Tailwind CDN이 포함되어 있습니다.)
+
+이 기능을 통해 외부 API 데이터를 쉽게 가져와 웹 애플리케이션에 통합하는 방법을 이해할 수 있습니다.
+
 ## 나만의 프로젝트로 만들기
 
 이 스타터 프로젝트를 기반으로 자신만의 애플리케이션을 개발하려면 다음 단계를 따르세요.
