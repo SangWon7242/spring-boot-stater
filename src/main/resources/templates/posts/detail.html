@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layouts/default_layout :: layout(~{::title}, ~{::section})}">
+<head>
+    <title>게시물 상세</title>
+</head>
+<body>
+    <section>
+        <h2 th:text="${post.title}">게시물 제목</h2>
+        <p><strong>ID:</strong> <span th:text="${post.id}">1</span></p>
+        <p><strong>내용:</strong> <span th:text="${post.content}">게시물 내용이 여기에 표시됩니다.</span></p>
+        <!-- 필요에 따라 더 많은 게시물 상세 정보를 추가하세요 -->
+        <a th:href="@{/posts}">목록으로 돌아가기</a>
+    </section>
+</body>
+</html>

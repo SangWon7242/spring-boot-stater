@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" th:fragment="layout(title, content)">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:replace="${title}">My Application</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <!-- 추가적인 head 콘텐츠는 여기에 삽입될 수 있습니다 -->
+    <th:block th:replace="~{fragments/header :: head-extras}"></th:block>
+</head>
+<body>
+    <header th:replace="~{fragments/header :: headerFragment}"></header>
+
+    <main>
+        <div th:replace="${content}">
+            <!-- 특정 페이지의 콘텐츠가 여기에 삽입됩니다 -->
+        </div>
+    </main>
+
+    <footer th:replace="~{fragments/footer :: footerFragment}"></footer>
+
+    <script th:src="@{/js/main.js}"></script>
+    <!-- 추가적인 body 스크립트는 여기에 삽입될 수 있습니다 -->
+    <th:block th:replace="~{fragments/footer :: body-extras}"></th:block>
+</body>
+</html>

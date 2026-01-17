@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layouts/default_layout :: layout(~{::title}, ~{::section})}">
+<head>
+    <title>게시물 목록</title>
+</head>
+<body>
+    <section>
+        <h2>게시물 목록</h2>
+        <p>이 페이지는 게시물 목록을 표시합니다.</p>
+        <!-- 게시물 목록을 반복하는 예시 -->
+        <ul>
+            <li th:each="post : ${posts}">
+                <a th:href="@{/posts/{id}(id=${post.id})}" th:text="${post.title}">게시물 제목</a>
+            </li>
+        </ul>
+    </section>
+</body>
+</html>
